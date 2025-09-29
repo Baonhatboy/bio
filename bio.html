@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Build Config3.0</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0c1e2a, #152a3a, #1e3a4e);
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        /* Hiệu ứng sao băng */
+        .shooting-stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .star {
+            position: absolute;
+            background-color: #e0f7ff;
+            border-radius: 50%;
+            opacity: 0;
+        }
+
+        .shooting-star {
+            position: absolute;
+            height: 2px;
+            background: linear-gradient(90deg, rgba(224,247,255,0) 0%, #e0f7ff 70%, rgba(224,247,255,0) 100%);
+            border-radius: 50%;
+            opacity: 0;
+            filter: blur(1px);
+        }
+
+        /* Container chính */
+        .container {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 500px;
+            padding: 20px;
+        }
+
+        /* Form đăng nhập */
+        .login-container {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(15px);
+            border-radius: 16px;
+            padding: 35px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            animation: fadeIn 1s ease-out;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .login-header h2 {
+            font-size: 32px;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, #4fc3f7, #29b6f6, #0288d1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .crown {
+            color: #FFD700;
+            font-size: 28px;
+            margin-left: 8px;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+            animation: crownGlow 2s ease-in-out infinite alternate;
+        }
+
+        .login-header p {
+            color: rgba(224, 247, 255, 0.8);
+            font-size: 15px;
+            font-weight: 300;
+            letter-spacing: 0.3px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 12px;
+            font-weight: 600;
+            color: #b3e5fc;
+            font-size: 18px;
+        }
+
+        input[type="password"] {
+            width: 100%;
+            padding: 16px 20px;
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            color: white;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        input[type="password"]:focus {
+            outline: none;
+            border-color: #4fc3f7;
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 0 3px rgba(79, 195, 247, 0.2);
+        }
+
+        input[type="password"]::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #0288d1, #01579b);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(2, 136, 209, 0.4);
+            background: linear-gradient(135deg, #039be5, #0277bd);
+        }
+
+        .error {
+            color: #ff6b6b;
+            margin-top: 15px;
+            text-align: center;
+            font-size: 16px;
+            min-height: 20px;
+            font-weight: 600;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Trang chính */
+        .main-content {
+            text-align: center;
+            padding: 35px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(15px);
+            border-radius: 16px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            animation: fadeIn 1s ease-out;
+        }
+
+        .main-content h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #4fc3f7, #29b6f6, #0288d1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+            position: relative;
+            display: inline-block;
+        }
+
+        .main-content .crown {
+            font-size: 32px;
+            margin-left: 10px;
+        }
+
+        .main-content p {
+            margin-bottom: 18px;
+            line-height: 1.7;
+            color: rgba(224, 247, 255, 0.9);
+            font-size: 16px;
+        }
+
+        /* Phần cài đặt */
+        .settings-section {
+            margin: 30px 0;
+            text-align: left;
+        }
+
+        .settings-title {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: #4fc3f7;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .settings-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .setting-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .setting-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(79, 195, 247, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .setting-item input[type="checkbox"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 22px;
+            height: 22px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 5px;
+            margin-right: 15px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .setting-item input[type="checkbox"]:checked {
+            background: linear-gradient(135deg, #4fc3f7, #29b6f6);
+            border-color: #4fc3f7;
+        }
+
+        .setting-item input[type="checkbox"]:checked::after {
+            content: '✓';
+            position: absolute;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .setting-item label {
+            color: #b3e5fc;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 0;
+            cursor: pointer;
+            flex: 1;
+        }
+
+        /* Phần DPI */
+        .dpi-section {
+            margin: 20px 0;
+        }
+
+        .dpi-section h3 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: #b3e5fc;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .dpi-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .dpi-option {
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: #b3e5fc;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .dpi-option:hover {
+            background: rgba(79, 195, 247, 0.2);
+            border-color: #4fc3f7;
+            transform: translateY(-2px);
+        }
+
+        .dpi-option.active {
+            background: linear-gradient(135deg, #4fc3f7, #29b6f6);
+            color: white;
+            border-color: #4fc3f7;
+            box-shadow: 0 0 15px rgba(79, 195, 247, 0.5);
+        }
+
+        /* Phần FPS Boost🚀 */
+        .fps-section {
+            margin: 20px 0;
+        }
+
+        .fps-title {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: #b3e5fc;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .fps-slider-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        .fps-slider {
+            flex: 1;
+            -webkit-appearance: none;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 4px;
+            outline: none;
+            width: 100%;
+        }
+
+        .fps-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 22px;
+            height: 22px;
+            background: linear-gradient(135deg, #4fc3f7, #29b6f6);
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid white;
+            box-shadow: 0 0 15px rgba(79, 195, 247, 0.7);
+        }
+
+        .fps-slider::-moz-range-thumb {
+            width: 22px;
+            height: 22px;
+            background: linear-gradient(135deg, #4fc3f7, #29b6f6);
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid white;
+            box-shadow: 0 0 15px rgba(79, 195, 247, 0.7);
+        }
+
+        .fps-value {
+            color: #4fc3f7;
+            font-weight: 600;
+            font-size: 16px;
+            background: rgba(79, 195, 247, 0.1);
+            padding: 6px 12px;
+            border-radius: 8px;
+            min-width: 50px;
+            text-align: center;
+        }
+
+        /* Nút xác nhận */
+        .confirm-btn {
+            margin-top: 20px;
+            background: linear-gradient(135deg, #00c853, #00e676);
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .confirm-btn:hover {
+            background: linear-gradient(135deg, #00e676, #00c853);
+            box-shadow: 0 8px 20px rgba(0, 200, 83, 0.4);
+        }
+
+        /* Thông báo thành công */
+        .success-message {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(0, 200, 83, 0.1);
+            border: 1px solid rgba(0, 200, 83, 0.3);
+            border-radius: 10px;
+            color: #00e676;
+            font-size: 16px;
+            font-weight: 600;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .success-icon {
+            font-size: 24px;
+            margin-right: 8px;
+        }
+
+        .logout-btn {
+            width: auto;
+            padding: 12px 30px;
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            margin-top: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(25px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes shootingStar {
+            0% { transform: translateX(0) translateY(0) rotate(45deg); opacity: 1; width: 0; }
+            10% { width: 120px; }
+            80% { opacity: 1; }
+            100% { transform: translateX(350px) translateY(350px) rotate(45deg); opacity: 0; width: 120px; }
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        @keyframes crownGlow {
+            0% { text-shadow: 0 0 10px rgba(255, 215, 0, 0.5); }
+            100% { text-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 0 30px rgba(255, 215, 0, 0.6); }
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .login-container, .main-content {
+                padding: 25px;
+            }
+            
+            .login-header h2, .main-content h1 {
+                font-size: 28px;
+            }
+            
+            .crown {
+                font-size: 24px;
+            }
+            
+            .settings-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .dpi-options {
+                grid-template-columns: 1fr;
+            }
+            
+            .dpi-option, .setting-item label {
+                font-size: 16px;
+                padding: 12px;
+            }
+            
+            label, input[type="password"], button {
+                font-size: 16px;
+            }
+            
+            input[type="password"] {
+                padding: 14px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hiệu ứng sao băng -->
+    <div class="shooting-stars" id="shootingStars"></div>
+
+    <!-- Container chính -->
+    <div class="container">
+        <!-- Trang đăng nhập -->
+        <div id="loginPage" class="login-container">
+            <div class="login-header">
+                <h2>Build Config3.0<span class="crown">👑</span></h2>
+                <p>Chào mừng bạn đến với Config3.0</p>
+            </div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="password">Mật khẩu:</label>
+                    <input type="password" id="password" name="password" placeholder="Nhập mật khẩu" required>
+                </div>
+                <button type="submit">Đăng Nhập</button>
+            </form>
+            <div id="errorMessage" class="error"></div>
+        </div>
+
+        <!-- Trang chính (ban đầu ẩn) -->
+        <div id="mainPage" class="main-content hidden">
+            <h1>Build Config3.0<span class="crown">👑</span></h1>
+            <p>Bạn đã đăng nhập thành công.</p>
+            <p>Chào mừng bạn đến với Config3.0</p>
+            
+            <!-- Phần cài đặt -->
+            <div class="settings-section">
+                <div class="settings-title">CÀI ĐẶT</div>
+                
+                <!-- Các cài đặt khác -->
+                <div class="settings-grid">
+                    <div class="setting-item">
+                        <input type="checkbox" id="AimLock🎯">
+                        <label for="AimLock🎯">AimLock🎯</label>
+                    </div>
+                    <div class="setting-item">
+                        <input type="checkbox" id="Nhẹ Tâm⚡️">
+                        <label for="Nhẹ Tâm⚡️">Nhẹ Tâm⚡️</label>
+                    </div>
+                    <div class="setting-item">
+                        <input type="checkbox" id="DragTouch🧩">
+                        <label for="DragTouch🧩">DragTouch🧩</label>
+                    </div>
+                    <div class="setting-item">
+                        <input type="checkbox" id="Unlock120Hz📱">
+                        <label for="Unlock120Hz📱">Unlock120Hz📱</label>
+                    </div>
+                    <div class="setting-item">
+                        <input type="checkbox" id="NoRecoil☄️">
+                        <label for="NoRecoil☄️">NoRecoil☄️</label>
+                    </div>
+                    <div class="setting-item">
+                        <input type="checkbox" id="BoostPing👾">
+                        <label for="BoostPing👾">BoostPing👾</label>
+                    </div>
+                </div>
+                
+                <!-- Phần DPI -->
+                <div class="dpi-section">
+                    <h3>CHỌN DPI:</h3>
+                    <div class="dpi-options">
+                        <div class="dpi-option" data-value="thap">Thấp</div>
+                        <div class="dpi-option" data-value="vua">Vừa</div>
+                        <div class="dpi-option" data-value="cao">Cao</div>
+                        <div class="dpi-option" data-value="ultimate">Ultimate</div>
+                    </div>
+                </div>
+                
+                <!-- Phần FPS Boost 🚀-->
+                <div class="fps-section">
+                    <h3>FPS Boost</h3>
+                    <div class="fps-slider-container">
+                        <input type="range" min="60" max="240" value="60" class="fps-slider" id="fpsSlider">
+                        <div class="fps-value" id="fpsValue">60</div>
+                    </div>
+                </div>
+                
+                <!-- Nút xác nhận -->
+                <button class="confirm-btn" id="confirmBtn">Xác Nhận</button>
+                
+                <!-- Thông báo thành công -->
+                <div id="successMessage" class="success-message hidden">
+                    <span class="success-icon">✅</span> Thành Công
+                </div>
+            </div>
+
+            <p id="welcomeMessage">Chúc Bạn Có Trải Nghiệm Vui Vẻ!</p>
+            
+            <div class="notes" style="margin-top:20px; text-align:center; color:#4fc3f7; font-size:15px;">
+                📱0522271791 &nbsp;&nbsp; 👑Admin:Tweak-Dbao
+            </div>
+
+            <button class="logout-btn" onclick="logout()">Đăng Xuất</button>
+        </div>
+    </div>
+
+    <script>
+        const CORRECT_PASSWORD = "Teawk-Dbao";
+        let currentDpi = "thap";
+
+        function createStars() {
+            const container = document.getElementById('shootingStars');
+            for (let i = 0; i < 150; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                const size = Math.random() * 3;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.opacity = Math.random() * 0.7 + 0.3;
+                star.style.animation = `twinkle ${Math.random() * 5 + 3}s infinite`;
+                star.style.animationDelay = `${Math.random() * 5}s`;
+                container.appendChild(star);
+            }
+            setInterval(() => {
+                createShootingStar();
+            }, 1500);
+        }
+
+        function createShootingStar() {
+            const container = document.getElementById('shootingStars');
+            const shootingStar = document.createElement('div');
+            shootingStar.classList.add('shooting-star');
+            const startX = Math.random() * 100;
+            const startY = Math.random() * 30;
+            shootingStar.style.left = `${startX}%`;
+            shootingStar.style.top = `${startY}%`;
+            const colors = [
+                'rgba(224, 247, 255, 1)',
+                'rgba(179, 229, 252, 1)',
+                'rgba(129, 212, 250, 1)',
+                'rgba(79, 195, 247, 1)'
+            ];
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            shootingStar.style.background = `linear-gradient(90deg, rgba(224,247,255,0) 0%, ${color} 70%, rgba(224,247,255,0) 100%)`;
+            const duration = Math.random() * 2 + 1;
+            const length = Math.random() * 150 + 50;
+            shootingStar.style.animation = `shootingStar ${duration}s linear`;
+            shootingStar.style.width = `${length}px`;
+            container.appendChild(shootingStar);
+            setTimeout(() => {
+                container.removeChild(shootingStar);
+            }, duration * 1000);
+        }
+
+        window.onload = function() {
+            createStars();
+
+            // Nếu trước đó đã đăng nhập, tự động vào trang chính
+            if (localStorage.getItem('isLoggedIn') === 'true') {
+                showMainPage();
+            }
+
+            // PHỤC HỒI các giá trị đã lưu
+            restoreSettingsFromStorage();
+
+            // Thiết lập sự kiện cho DPI options
+            const dpiOptions = document.querySelectorAll('.dpi-option');
+            
+            dpiOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    dpiOptions.forEach(opt => opt.classList.remove('active'));
+                    this.classList.add('active');
+                    currentDpi = this.getAttribute('data-value');
+                    localStorage.setItem('selectedDpi', currentDpi);
+                });
+            });
+
+            // Slider FPS Boost & hiển thị
+            const fpsSlider = document.getElementById('fpsSlider');
+            const fpsValue = document.getElementById('fpsValue');
+            fpsSlider.addEventListener('input', function() {
+                fpsValue.textContent = this.value;
+                localStorage.setItem('fpsValue', this.value);
+            });
+
+            // Nút xác nhận lưu tất cả thiết lập
+            document.getElementById('confirmBtn').addEventListener('click', function() {
+                const successMessage = document.getElementById('successMessage');
+                const welcomeMessage = document.getElementById('welcomeMessage');
+                successMessage.classList.remove('hidden');
+                welcomeMessage.textContent = "Chúc Bạn Có Trải Nghiệm Vui Vẻ!";
+
+                setTimeout(() => {
+                    successMessage.classList.add('hidden');
+                }, 3000);
+
+                // Lưu các checkbox
+                const checkboxes = ['AimLock','NhipTam','DragTouch','Unlock120Hz','NoRecoil','BoostPing'];
+                checkboxes.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) {
+                        localStorage.setItem(id, el.checked);
+                    }
+                });
+
+                // Lưu FPS Boost🚀
+                const fps = document.getElementById('fpsSlider').value;
+                localStorage.setItem('fpsValue', fps);
+
+                // Lưu DPI
+                localStorage.setItem('selectedDpi', currentDpi);
+
+                
+                setTimeout(() => {
+                    alert("Tác Dụng 50% – Liên Hệ Admin để có Tác Dụng 100%");
+                }, 1000);
+
+                console.log('Cài đặt đã lưu:', {
+                    dpi: currentDpi,
+                    fps: fps,
+                    AimLock: document.getElementById('AimLock').checked,
+                    NhipTam: document.getElementById('NhipTam').checked,
+                    DragTouch: document.getElementById('DragTouch').checked,
+                    Unlock120Hz: document.getElementById('Unlock120Hz').checked,
+                    NoRecoil: document.getElementById('NoRecoil').checked,
+                    BoostPing: document.getElementById('BoostPing').checked
+                });
+            });
+        };
+
+        function restoreSettingsFromStorage() {
+            // Khôi phục DPI
+            const savedDpi = localStorage.getItem('selectedDpi');
+            if (savedDpi) {
+                currentDpi = savedDpi;
+                const dpiOptions = document.querySelectorAll('.dpi-option');
+                dpiOptions.forEach(opt => {
+                    if (opt.getAttribute('data-value') === savedDpi) {
+                        opt.classList.add('active');
+                    }
+                });
+            }
+
+            // Khôi phục FPS Boost🚀
+            const fpsSlider = document.getElementById('fpsSlider');
+            const fpsValue = document.getElementById('fpsValue');
+            const savedFps = localStorage.getItem('fpsValue');
+            if (savedFps) {
+                fpsSlider.value = savedFps;
+                fpsValue.textContent = savedFps;
+            }
+
+            // Khôi phục các checkbox
+            const checkboxes = ['AimLock🎯','NhipTam⚡️','DragTouch🧩','Unlock120Hz📱','NoRecoil☄️','BoostPing👾'];
+            checkboxes.forEach(id => {
+                const saved = localStorage.getItem(id);
+                if (saved !== null) {
+                    const el = document.getElementById(id);
+                    if (el) {
+                        el.checked = (saved === 'true');
+                    }
+                }
+            });
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const password = document.getElementById('password').value;
+            const errorMessage = document.getElementById('errorMessage');
+            if (password === CORRECT_PASSWORD) {
+                localStorage.setItem('isLoggedIn', 'true');
+                showMainPage();
+            } else {
+                errorMessage.textContent = "Vui Lòng Nhập Đúng Mật Khẩu 🔑";
+                document.getElementById('loginForm').style.animation = 'none';
+                setTimeout(() => {
+                    document.getElementById('loginForm').style.animation = 'shake 0.5s';
+                }, 10);
+                setTimeout(() => {
+                    document.getElementById('loginForm').style.animation = '';
+                }, 500);
+            }
+        });
+
+        function showMainPage() {
+            document.getElementById('loginPage').classList.add('hidden');
+            document.getElementById('mainPage').classList.remove('hidden');
+        }
+
+        function logout() {
+            localStorage.removeItem('isLoggedIn');
+            document.getElementById('mainPage').classList.add('hidden');
+            document.getElementById('loginPage').classList.remove('hidden');
+            document.getElementById('password').value = '';
+            document.getElementById('errorMessage').textContent = '';
+        }
+
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+                20%, 40%, 60%, 80% { transform: translateX(5px); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
